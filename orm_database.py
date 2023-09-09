@@ -24,7 +24,8 @@ class Player(BaseModel):
 
 
 def add_player(new_player):
-    Player.create(username=new_player)
+    if new_player not in all_players():
+        Player.create(username=new_player)
 
 
 def statistic(_player):
