@@ -37,13 +37,15 @@ def statistic(_player):
     player_stats = Player.get(Player.username == _player)
     return f"""
 Статистика {_player}:
-ударов - {player_stats.combats}
-зубов выбито - {player_stats.teeth}
-прилётов в зубы - {player_stats.kicks_get}
+ударов -> {player_stats.combats}
+зубов выбито -> {player_stats.teeth}
+прилётов в зубы -> {player_stats.kicks_get}
+
 ***________________***
-обнимашек - {player_stats.hugs}
-цветов подарено -{player_stats.flowers}
-получил(а) объятий - {player_stats.hugs_get}
+
+обнимашек -> {player_stats.hugs}
+цветов подарено -> {player_stats.flowers}
+получил(а) объятий -> {player_stats.hugs_get}
 """
 
 

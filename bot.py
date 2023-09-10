@@ -26,7 +26,6 @@ def say_hi(message):
 
 
 def add_or_nah(message):
-    # bot.clear_step_handler_by_chat_id(chat_id=message.chat.id)
     chat = message.chat.id
     answer = message.text
     user = message.from_user.username or message.from_user.first_name
@@ -38,12 +37,6 @@ def add_or_nah(message):
 
     elif answer == 'Я пуська(':
         i_am_out(chat, user)
-        # del_player(user)
-        # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        # go_back = types.KeyboardButton('/start')
-        # markup.add(go_back)
-        # bot.send_sticker(chat, 'CAACAgIAAxkBAAL82mT6_I9XB991ig4amZAjx4_OgxwbAAKxGgAC3vWhS-cUzkOLVSQEMAQ')
-        # bot.send_message(chat, f'Я так и думал. Возвращайся, если передумаешь...', reply_markup=markup)
 
     else:
         bot.send_message(chat, f'Просто нажми кнопку!')
@@ -85,8 +78,6 @@ def choose_func(message, action):
         return kick_or_hug('hug', user)
     elif action == 'Статистика.':
         return statistic(user)
-    elif action == 'Я ухожу!':
-        i_am_out(message.chat.id, user)
 
 
 @bot.message_handler(content_types=['text'])
@@ -95,18 +86,7 @@ def echo(message):
         bot.send_message(message.chat.id, choose_func(message, message.text))
     elif message.text == 'Я ухожу!':
         i_am_out(message.chat.id, message.from_user.username or message.from_user.first_name)
-    #     answers_dict = {
-    #         'Удар!': kick_or_hug('kick', message.from_user.username or message.from_user.first_name),
-    #         'Обнимашки!': kick_or_hug('hug', message.from_user.username or message.from_user.first_name),
-    #         'Статистика.': statistic(message.from_user.username or message.from_user.first_name),
-    #         'Я ухожу!': i_am_out(message.chat.id, message.from_user.username or message.from_user.first_name),
-    #
-    #     }
-    # # answer = answers_dict.get(message.text)
-    # if message.text in answers_dict:
-    #     return answers_dict[message.text]
-    # # if answer:
-    # #     bot.send_message(message.chat.id, answer)
+
     else:
         pass
 
