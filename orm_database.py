@@ -28,6 +28,11 @@ def add_player(new_player):
         Player.create(username=new_player)
 
 
+def del_player(pla):
+    pl = Player.get(Player.username == pla)
+    pl.delete_instance()
+
+
 def statistic(_player):
     player_stats = Player.get(Player.username == _player)
     return f"""
@@ -40,13 +45,6 @@ def statistic(_player):
 цветов подарено -{player_stats.flowers}
 получил(а) объятий - {player_stats.hugs_get}
 """
-
-
-
-
-
-
-
 
 
 def all_players():
