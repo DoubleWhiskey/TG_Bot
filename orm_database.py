@@ -49,7 +49,7 @@ def statistic(_player):
 обнимашек -> {player_stats.hugs}
 цветов подарено -> {player_stats.flowers}
 объятий получено -> {player_stats.hugs_get}
-цветов получено> {player_stats.flowers_get}
+цветов получено -> {player_stats.flowers_get}
 """
 
 
