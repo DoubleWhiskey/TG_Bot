@@ -5,6 +5,8 @@ users_list = all_players()
 
 
 def kick_or_hug(action, player):
+    if not users_list or (len(users_list) == 1 and player in users_list):
+        return f"Тут никого нет. Попробуй позвать друзей."
     victim = choice(list(filter(lambda x: x != player, users_list)))
     amount = randint(1, 32)
     player_in_db = Player.get(username=player)

@@ -18,6 +18,8 @@ class Player(BaseModel):
     flowers = IntegerField(column_name='Flowers', default=0)
     kicks_get = IntegerField(column_name='Kicks_get', default=0)
     hugs_get = IntegerField(column_name='Hugs_get', default=0)
+    teeth_out = IntegerField(column_name='Teeth_out', default=0)
+    flowers_get = IntegerField(column_name='Flowers_get', default=0)
 
     class Meta:
         table_name = 'players'
@@ -40,12 +42,14 @@ def statistic(_player):
 ударов -> {player_stats.combats}
 зубов выбито -> {player_stats.teeth}
 прилётов в зубы -> {player_stats.kicks_get}
+зубов потеряно -> {player_stats.teeth_out}
 
 ***________________***
 
 обнимашек -> {player_stats.hugs}
 цветов подарено -> {player_stats.flowers}
-получил(а) объятий -> {player_stats.hugs_get}
+объятий получено -> {player_stats.hugs_get}
+цветов получено> {player_stats.flowers_get}
 """
 
 
