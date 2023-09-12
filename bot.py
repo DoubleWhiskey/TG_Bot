@@ -9,47 +9,79 @@ from orm_database import *
 bot = telebot.TeleBot(TOKEN)
 
 
+def database_check(message):
+    if isinstance(message, str):
+        return message in all_players()
+    else:
+        user = message.from_user.username or message.from_user.first_name
+        return user in all_players()
+
+
+def join_the_club(message, user):
+    add_player(user)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    club = types.KeyboardButton('Я в деле!')
+    pussy = types.KeyboardButton('Я пуська(')
+    markup.add(club, pussy)
+    bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAL81mT6_C5Phnx_6qbrm8h3ctGRHtnHAAL9GgACNeKgS3dqE61odyNCMAQ')
+    bot.send_message(message.chat.id, f"Привет, {user}! Хочешь вступить в наш клуб?", reply_markup=markup)
+
+
 @bot.message_handler(commands=['start'])
 def say_hi(message):
     user = message.from_user.username or message.from_user.first_name
-    if user in all_players():
+    if database_check(message):
         to_the_business(message)
     else:
-        add_player(user)
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        club = types.KeyboardButton('Я в деле!')
-        pussy = types.KeyboardButton('Я пуська(')
-        markup.add(club, pussy)
-        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAL81mT6_C5Phnx_6qbrm8h3ctGRHtnHAAL9GgACNeKgS3dqE61odyNCMAQ')
-        bot.send_message(message.chat.id, f"Привет, {user}! Хочешь вступить в наш клуб?", reply_markup=markup)
-        bot.register_next_step_handler(message, add_or_nah)
+        join_the_club(message, user)
+        # add_player(user)
+        # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        # club = types.KeyboardButton('Я в деле!')
+        # pussy = types.KeyboardButton('Я пуська(')
+        # markup.add(club, pussy)
+        # bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAL81mT6_C5Phnx_6qbrm8h3ctGRHtnHAAL9GgACNeKgS3dqE61odyNCMAQ')
+        # bot.send_message(message.chat.id, f"Привет, {user}! Хочешь вступить в наш клуб?", reply_markup=markup)
+        # bot.register_next_step_handler(message, add_or_nah)
 
 
-def add_or_nah(message):
-    chat = message.chat.id
-    answer = message.text
-    user = message.from_user.username or message.from_user.first_name
-
-    if answer == 'Я в деле!':
+def i_am_in(message):
+    if database_check(message):
+        chat = message.chat.id
+        # answer = message.text
+        # user = message.from_user.username or message.from_user.first_name
         bot.send_sticker(chat, 'CAACAgIAAxkBAAL82GT6_E3SRxAY6bqYCoVA3Xs9Al3mAAKmGQACaWehS61jIKeOdobtMAQ')
         bot.send_message(chat, f'Добро пожаловать в клуб!\nНе забывай правила...')
         to_the_business(message)
-
-    elif answer == 'Я пуська(':
-        i_am_out(chat, user)
-
     else:
-        bot.send_message(chat, f'Просто нажми кнопку!')
-        bot.register_next_step_handler(message, add_or_nah)
+        say_hi(message)
+
+
+# def add_or_nah(message):
+#     chat = message.chat.id
+#     answer = message.text
+#     user = message.from_user.username or message.from_user.first_name
+#
+#     if answer == 'Я в деле!':
+#         bot.send_sticker(chat, 'CAACAgIAAxkBAAL82GT6_E3SRxAY6bqYCoVA3Xs9Al3mAAKmGQACaWehS61jIKeOdobtMAQ')
+#         bot.send_message(chat, f'Добро пожаловать в клуб!\nНе забывай правила...')
+#         to_the_business(message)
+#
+#     elif answer == 'Я пуська(':
+#         i_am_out(chat, user)
+#
+#     else:
+#         bot.send_message(chat, f'Просто нажми кнопку!')
+#         bot.register_next_step_handler(message, add_or_nah)
 
 
 def i_am_out(chat, _player_):
-    del_player(_player_)
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    go_back = types.KeyboardButton('/start')
-    markup.add(go_back)
-    bot.send_sticker(chat, 'CAACAgIAAxkBAAL82mT6_I9XB991ig4amZAjx4_OgxwbAAKxGgAC3vWhS-cUzkOLVSQEMAQ')
-    bot.send_message(chat, f'Штош... Возвращайся, если передумаешь...', reply_markup=markup)
+    if database_check(_player_):
+        del_player(_player_)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        go_back = types.KeyboardButton('/start')
+        markup.add(go_back)
+        bot.send_sticker(chat, 'CAACAgIAAxkBAAL82mT6_I9XB991ig4amZAjx4_OgxwbAAKxGgAC3vWhS-cUzkOLVSQEMAQ')
+        bot.send_message(chat, f'Штош... Возвращайся, если передумаешь...', reply_markup=markup)
 
 
 def to_the_business(message):
@@ -78,15 +110,27 @@ def choose_func(message, action):
         return kick_or_hug('hug', user)
     elif action == 'Статистика.':
         return statistic(user)
+    elif action == 'Список':
+        return all_players() or 'Никого нет'
 
 
 @bot.message_handler(content_types=['text'])
 def echo(message):
-    if message.text in ('Удар!', 'Обнимашки!', 'Статистика.'):
-        bot.send_message(message.chat.id, choose_func(message, message.text))
-    elif message.text == 'Я ухожу!':
-        i_am_out(message.chat.id, message.from_user.username or message.from_user.first_name)
-
+    if message.text in ('Удар!', 'Обнимашки!', 'Статистика.', 'Список'):
+        if not database_check(message):
+            return say_hi(message)
+        else:
+            bot.send_message(message.chat.id, choose_func(message, message.text))
+    elif message.text in ('Я ухожу!', 'Я пуська('):
+        if not database_check(message):
+            return say_hi(message)
+        else:
+            i_am_out(message.chat.id, message.from_user.username or message.from_user.first_name)
+    elif message.text == 'Я в деле!':
+        if not database_check(message):
+            return say_hi(message)
+        else:
+            i_am_in(message)
     else:
         pass
 
