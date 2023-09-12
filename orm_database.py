@@ -1,8 +1,6 @@
 from config import DATABASE_PATH
 from peewee import *
 
-
-players_DB = MySQLDatabase
 conn = SqliteDatabase(DATABASE_PATH)
 
 
