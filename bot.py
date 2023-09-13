@@ -34,44 +34,16 @@ def say_hi(message):
         to_the_business(message)
     else:
         join_the_club(message, user)
-        # add_player(user)
-        # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        # club = types.KeyboardButton('Я в деле!')
-        # pussy = types.KeyboardButton('Я пуська(')
-        # markup.add(club, pussy)
-        # bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAL81mT6_C5Phnx_6qbrm8h3ctGRHtnHAAL9GgACNeKgS3dqE61odyNCMAQ')
-        # bot.send_message(message.chat.id, f"Привет, {user}! Хочешь вступить в наш клуб?", reply_markup=markup)
-        # bot.register_next_step_handler(message, add_or_nah)
 
 
 def i_am_in(message):
     if database_check(message):
         chat = message.chat.id
-        # answer = message.text
-        # user = message.from_user.username or message.from_user.first_name
         bot.send_sticker(chat, 'CAACAgIAAxkBAAL82GT6_E3SRxAY6bqYCoVA3Xs9Al3mAAKmGQACaWehS61jIKeOdobtMAQ')
         bot.send_message(chat, f'Добро пожаловать в клуб!\nНе забывай правила...')
         to_the_business(message)
     else:
         say_hi(message)
-
-
-# def add_or_nah(message):
-#     chat = message.chat.id
-#     answer = message.text
-#     user = message.from_user.username or message.from_user.first_name
-#
-#     if answer == 'Я в деле!':
-#         bot.send_sticker(chat, 'CAACAgIAAxkBAAL82GT6_E3SRxAY6bqYCoVA3Xs9Al3mAAKmGQACaWehS61jIKeOdobtMAQ')
-#         bot.send_message(chat, f'Добро пожаловать в клуб!\nНе забывай правила...')
-#         to_the_business(message)
-#
-#     elif answer == 'Я пуська(':
-#         i_am_out(chat, user)
-#
-#     else:
-#         bot.send_message(chat, f'Просто нажми кнопку!')
-#         bot.register_next_step_handler(message, add_or_nah)
 
 
 def i_am_out(chat, _player_):
@@ -111,7 +83,8 @@ def choose_func(message, action):
     elif action == 'Статистика.':
         return statistic(user)
     elif action == 'Список':
-        return all_players() or 'Никого нет'
+        result = ', '.join(all_players())
+        return result or 'Никого нет'
 
 
 @bot.message_handler(content_types=['text'])
